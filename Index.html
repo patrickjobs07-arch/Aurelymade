@@ -13,14 +13,14 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Outfit:wght@300;400;500;600;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
 <style>
   /* =========================================================
      BRAND COLORS — change these and the whole site updates
      ========================================================= */
   :root{
     --f-head:'Fraunces',Georgia,'Times New Roman',serif;
-    --f-body:'Outfit',system-ui,-apple-system,'Segoe UI',sans-serif;
+    --f-body:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
     --red:#A4161A;
     --red-deep:#7A0F12;
     --blush:#FAF0EE;
@@ -624,17 +624,38 @@
      INTERACTIVE PASSPORT — tap to open, flip the pages
      ========================================================= */
   .ppx{position:relative;display:flex;flex-direction:column;align-items:center;gap:18px}
-  .ppx-tilt{width:min(100%,410px);transition:transform .5s var(--ease);transform:perspective(1400px) rotateX(var(--ty,0deg)) rotateY(var(--tx,0deg))}
+  .ppx-tilt{width:min(100%,410px);transition:transform .5s var(--ease);transform-origin:50% 0;transform:perspective(1400px) rotateX(var(--ty,0deg)) rotateY(var(--tx,0deg)) scale(var(--pps,1));
+    margin-bottom:calc((var(--pps,1) - 1) * var(--ppH,580px))}
+  .ppx-label{white-space:nowrap}
+  @media (max-width:640px){ body.pp-in-view .to-top,body.lock-in-view .to-top{opacity:0!important;pointer-events:none!important;transform:translateY(20px)!important} }
   .ppx-book{position:relative;height:580px;perspective:2200px;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;touch-action:pan-y}
   .ppx-book:focus-visible{box-shadow:0 0 0 4px var(--blush-2);border-radius:18px}
   /* page stack edges behind the booklet */
   .ppx-book::before{content:"";position:absolute;inset:6px -7px -7px 6px;border-radius:8px 18px 18px 8px;background:#efe3dc;box-shadow:3px 3px 0 #e6d6ce,6px 6px 0 #dcc9bf,0 40px 60px -30px rgba(0,0,0,.45);transition:opacity .4s}
   .ppx.closed .ppx-book::before{opacity:0}
   .leaf{position:absolute;inset:0;border-radius:6px 18px 18px 6px;overflow:hidden;transform-origin:left center;backface-visibility:hidden;-webkit-backface-visibility:hidden;
-    transition:transform 1s var(--ease),opacity .25s .55s,box-shadow 1s;box-shadow:0 30px 50px -34px rgba(0,0,0,.45)}
-  .leaf.turned{transform:rotateY(-165deg);opacity:0;pointer-events:none}
-  .leaf:not(.turned){transition:transform 1s var(--ease),opacity .2s,box-shadow 1s}
-  .leaf.turning-back{transition:transform 1s var(--ease),opacity .2s}
+    transition:transform 1.5s cubic-bezier(.65,.05,.36,1) var(--d,0s),opacity .35s calc(1.15s + var(--d,0s)),box-shadow 1.5s cubic-bezier(.65,.05,.36,1) var(--d,0s);box-shadow:0 30px 50px -34px rgba(0,0,0,.45)}
+  .leaf.turned{transform:rotateY(-170deg);opacity:0;pointer-events:none;box-shadow:-40px 0 60px -30px rgba(0,0,0,.35)}
+  .leaf:not(.turned){transition:transform 1.5s cubic-bezier(.65,.05,.36,1) var(--d,0s),opacity .25s var(--d,0s),box-shadow 1.5s cubic-bezier(.65,.05,.36,1) var(--d,0s)}
+  /* soft light sweeping over the page while it turns */
+  .leaf > .shade{position:absolute;inset:0;pointer-events:none;z-index:5;opacity:0;background:linear-gradient(90deg,rgba(0,0,0,.18),rgba(0,0,0,0) 45%,rgba(255,255,255,.35) 75%,rgba(0,0,0,.06));transition:opacity .75s ease}
+  .leaf.flipping > .shade{opacity:1}
+  /* brands page */
+  .bv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 10px;margin:2px 2px 10px}
+  .bv{display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0;transform:rotate(var(--r,0deg))}
+  .bv-logo{display:grid;place-items:center;width:100%;height:70px;padding:7px;border:2px dashed rgba(164,22,26,.45);border-radius:12px;background:#fff}
+  .bv-logo .img{width:100%;height:100%;background-size:contain;background-position:center}
+  .bv b{font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--red);text-align:center;line-height:1.25}
+  .bv-more{font-family:'Caveat',cursive;font-size:1.2rem;color:var(--ink);margin:0 4px 6px}
+  .bv-list{display:flex;flex-wrap:wrap;gap:5px;padding-bottom:26px}
+  .bv-list span{font-size:.66rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--red-deep);border:1.5px solid rgba(164,22,26,.4);border-radius:6px;padding:3px 7px;transform:rotate(var(--r,0deg));opacity:0}
+  .ppx .leaf.here .bv,.ppx .leaf.here .bv-list span{animation:stampIn .5s cubic-bezier(.3,1.5,.5,1) forwards}
+  .ppx .leaf.here .bv:nth-child(2){animation-delay:.12s}.ppx .leaf.here .bv:nth-child(3){animation-delay:.24s}
+  .ppx .leaf.here .bv:nth-child(4){animation-delay:.36s}.ppx .leaf.here .bv:nth-child(5){animation-delay:.48s}.ppx .leaf.here .bv:nth-child(6){animation-delay:.6s}
+  .ppx .leaf.here .bv-list span{animation-delay:.8s}
+  @media (max-width:420px){ .bv-logo{height:58px} .bv-grid{gap:8px 8px} .bv-list span{font-size:.6rem} }
+  @media (max-width:360px){ .bv-list span:nth-child(n+9){display:none} .bv-logo{height:52px} }
+  @media (prefers-reduced-motion:reduce){ .bv,.bv-list span{opacity:1} }
   /* paper pages */
   .pg{background:#FFFDFB;background-image:radial-gradient(circle at 80% 10%,rgba(164,22,26,.05),transparent 45%),repeating-linear-gradient(0deg,transparent 0 31px,rgba(164,22,26,.045) 31px 32px);padding:26px 24px 22px}
   .pg::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.12),rgba(0,0,0,0) 26px);pointer-events:none}
@@ -733,6 +754,28 @@
     .jst{width:132px}.jst .ink{width:110px;height:110px}
     .mrz{font-size:.6rem;letter-spacing:.08em}
   }
+
+  /* ---------- scroll "lock": the passport and the polaroid table catch the scroll and explain themselves ---------- */
+  .lock-target{position:relative}
+  .lock-hint{position:absolute;left:50%;top:14px;z-index:30;transform:translate(-50%,-8px);opacity:0;pointer-events:none;
+    display:flex;align-items:center;gap:10px;width:max-content;max-width:min(96%,380px);padding:10px 16px 12px 12px;border-radius:999px;
+    background:rgba(28,28,28,.88);color:#fff;font-size:.8rem;line-height:1.3;box-shadow:0 16px 30px -14px rgba(0,0,0,.55);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:opacity .4s cubic-bezier(.16,1,.3,1),transform .5s cubic-bezier(.16,1,.3,1)}
+  .lock-hint.show{opacity:1;transform:translate(-50%,0)}
+  .lock-hint .lh-ic{flex:none;width:30px;height:30px;border-radius:50%;background:var(--red);display:grid;place-items:center}
+  .lock-hint .lh-ic svg{width:16px;height:16px}
+  .lock-hint small{display:block;margin-top:2px;font-size:.68rem;opacity:.7;letter-spacing:.02em}
+  .lock-hint .lh-bar{position:absolute;left:18px;right:18px;bottom:4px;height:2px;border-radius:2px;background:rgba(255,255,255,.18);overflow:hidden}
+  .lock-hint .lh-bar i{position:absolute;inset:0;background:#fff;transform:scaleX(0);transform-origin:left}
+  .lock-hint.show .lh-bar i{animation:lhBar var(--lock,1.4s) linear forwards}
+  .lock-hint.nudge{animation:lhNudge .4s}
+  @keyframes lhBar{to{transform:scaleX(1)}}
+  @keyframes lhNudge{25%{transform:translate(calc(-50% - 6px),0)}75%{transform:translate(calc(-50% + 6px),0)}}
+  .ppx .lock-hint{top:-6px}
+  /* the polaroid table always fits the screen below the menu bar */
+  .table{height:clamp(440px,calc(100svh - 110px),660px)}
+  @media (max-width:640px){ .table{height:clamp(420px,calc(100svh - 92px),560px)} }
+  @media (prefers-reduced-motion:reduce){ .lock-hint{transition:opacity .2s} .lock-hint.nudge{animation:none} }
 
   /* =========================================================
      MENU: icons + close when tapping outside
@@ -1256,10 +1299,51 @@
   .paper p{font-family:var(--f-body);font-size:.95rem;line-height:1.75;color:var(--ink)}
   .paper p b{color:var(--red)}
   .ugc-points{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:24px}
-  .ugc-points div{text-align:center;padding:14px 8px;border:1px dashed rgba(164,22,26,.35);border-radius:12px;font-size:.82rem;font-weight:600;color:var(--ink);line-height:1.35;transition:background .4s,color .4s,transform .5s var(--ease)}
-  .ugc-points div svg{display:block;margin:0 auto 8px;color:var(--red);transition:color .4s}
-  .ugc-points div:hover{background:var(--red);color:#fff;transform:translateY(-4px)}
-  .ugc-points div:hover svg{color:#fff}
+  /* three "why UGC" cards: each acts out its idea (link, conversation, trust filling up) */
+  .ugc-points .up{position:relative;text-align:center;padding:16px 10px 16px;border-radius:16px;background:var(--blush);border:1px solid var(--blush-2);
+    box-shadow:0 14px 26px -18px rgba(122,15,18,.45);font-size:.84rem;font-weight:600;color:var(--ink);line-height:1.35;overflow:hidden;
+    transition:transform .5s cubic-bezier(.16,1,.3,1),box-shadow .5s cubic-bezier(.16,1,.3,1),border-color .4s,background .4s}
+  .ugc-points .up::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .9s cubic-bezier(.16,1,.3,1)}
+  .ugc-points.play .up::before{transform:scaleX(1)}
+  .ugc-points.play .up:nth-child(2)::before{transition-delay:.25s}.ugc-points.play .up:nth-child(3)::before{transition-delay:.5s}
+  .ugc-points .up:hover{transform:translateY(-6px);background:#fff;border-color:rgba(164,22,26,.35);box-shadow:0 24px 34px -20px rgba(164,22,26,.55)}
+  .up-art{position:relative;display:block;height:52px;margin:0 auto 10px;width:100%;max-width:130px}
+  /* connections: two people, one line drawn between them, a spark where they meet */
+  .up-connect svg{width:100%;height:100%;overflow:visible}
+  .up-connect .lk{fill:none;stroke:var(--red);stroke-width:2.2;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1}
+  .up-connect .n1{fill:var(--red)} .up-connect .n2{fill:#fff;stroke:var(--ink);stroke-width:2.2}
+  .up-connect .sp{fill:var(--red);opacity:0;transform-origin:60px 24px;transform:scale(0)}
+  .ugc-points.play .up-connect .lk{animation:upDraw 1.1s .2s cubic-bezier(.16,1,.3,1) forwards}
+  .ugc-points.play .up-connect .sp{animation:upSpark .6s 1.05s cubic-bezier(.16,1,.3,1) forwards}
+  .ugc-points.play .up-connect .n2{animation:upPing .5s 1.05s ease-out}
+  @keyframes upDraw{to{stroke-dashoffset:0}}
+  @keyframes upSpark{0%{opacity:0;transform:scale(0)}60%{opacity:1;transform:scale(1.6)}100%{opacity:1;transform:scale(1)}}
+  @keyframes upPing{50%{fill:var(--blush-2)}}
+  /* storytelling: someone types, then the brand answers */
+  .bub{position:absolute;display:flex;align-items:center;gap:4px;padding:8px 11px;border-radius:14px}
+  .b1{left:6%;top:2px;background:#fff;border:1px solid var(--blush-2);border-bottom-left-radius:4px}
+  .b1 i{width:6px;height:6px;border-radius:50%;background:var(--muted);opacity:.35}
+  .b2{right:6%;bottom:0;background:var(--red);border-bottom-right-radius:4px;opacity:0;transform:translateY(6px) scale(.9);transform-origin:right bottom}
+  .b2 i{display:block;height:4px;border-radius:4px;background:rgba(255,255,255,.85)} .b2 i:first-child{width:30px} .b2 i:last-child{width:16px}
+  .ugc-points.play .b1 i{animation:upType 1.2s ease-in-out infinite}
+  .ugc-points.play .b1 i:nth-child(2){animation-delay:.15s}.ugc-points.play .b1 i:nth-child(3){animation-delay:.3s}
+  .ugc-points.play .b2{animation:upReply .55s 1.3s cubic-bezier(.16,1,.3,1) forwards}
+  @keyframes upType{0%,60%,100%{opacity:.35;transform:none}30%{opacity:1;transform:translateY(-3px)}}
+  @keyframes upReply{to{opacity:1;transform:none}}
+  /* trust: the heart fills up and little likes float away */
+  .up-trust .ht{position:absolute;left:50%;top:4px;width:44px;height:44px;margin-left:-22px;overflow:visible}
+  .up-trust .ho{fill:none;stroke:var(--red);stroke-width:1.8}
+  .up-trust .hf{fill:var(--red);clip-path:inset(100% 0 0 0)}
+  .ugc-points.play .up-trust .hf{animation:upFill 1.3s .45s cubic-bezier(.16,1,.3,1) forwards}
+  .mh{position:absolute;left:50%;top:14px;font-size:.7rem;color:var(--red);opacity:0}
+  .ugc-points.play .mh{animation:upFloat 1.6s 1.5s ease-out forwards}
+  .ugc-points.play .m2{animation-delay:1.7s;margin-left:14px}.ugc-points.play .m3{animation-delay:1.9s;margin-left:-20px}
+  @keyframes upFill{to{clip-path:inset(0 0 0 0)}}
+  @keyframes upFloat{0%{opacity:0;transform:translate(8px,6px) scale(.6)}25%{opacity:1}100%{opacity:0;transform:translate(16px,-30px) scale(1)}}
+  @media (prefers-reduced-motion:reduce){
+    .up-connect .lk{stroke-dashoffset:0}.up-connect .sp{opacity:1;transform:none}.b2{opacity:1;transform:none}.up-trust .hf{clip-path:none}
+    .ugc-points .up::before{transform:scaleX(1)}
+  }
 
   /* ---------- Testimonials ---------- */
   .testi{background:var(--blush);overflow:hidden}
@@ -1293,6 +1377,8 @@
   }
   @media (max-width:600px){
     .ugc-points{grid-template-columns:1fr}
+    .ugc-points .up{display:grid;grid-template-columns:120px 1fr;align-items:center;text-align:left;gap:14px;padding:14px 18px}
+    .ugc-points .up-art{margin:0}
     .paper{padding:32px 22px 24px;transform:none}
     .quote{padding:42px 24px 24px}
     .stats-band .inner{padding:44px 0 40px}
@@ -1622,16 +1708,255 @@
   .hero h1 .dot{color:var(--red)}
   .tile .add-ph{bottom:auto;top:12px}
   .rdot{color:var(--red);font-style:normal}
+  .kick .rdot{color:var(--ink)}
   .about .title .script{line-height:1.2;margin-bottom:4px}
 
-  /* ---------- Typography: Fraunces (headings) + Outfit (text) ---------- */
-  body{font-family:var(--f-body);font-weight:300;letter-spacing:-.005em}
+  /* ---------- contact form: services picker + auto-growing details box ---------- */
+  .form .svc-pick{border:0;padding:0;margin:4px 0 0;min-width:0}
+  .svc-pick legend{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;width:100%;padding:0;margin-bottom:12px;font-size:.92rem;font-weight:500;color:var(--ink)}
+  .svc-pick legend small{font-size:.78rem;color:var(--muted);font-weight:400}
+  .svc-pick .pick-all{all:unset;margin-left:auto;cursor:pointer;font-size:.8rem;font-weight:600;color:var(--red);text-decoration:underline;text-underline-offset:3px}
+  .svc-pick .pick-all:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:4px}
+  .pick-list{display:flex;flex-wrap:wrap;gap:10px}
+  .pick{position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .pick input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+  .pick span{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:999px;background:var(--field);border:1.5px solid transparent;font-size:.86rem;color:var(--ink);transition:background .3s,border-color .3s,color .3s,transform .3s var(--ease)}
+  .pick span::before{content:"";width:14px;height:14px;border-radius:50%;border:1.5px solid #B9AEAC;flex:none;transition:all .3s}
+  .pick:hover span{border-color:var(--blush-2);transform:translateY(-1px)}
+  .pick input:checked + span{background:var(--red);color:#fff;border-color:var(--red);box-shadow:0 8px 18px -10px rgba(164,22,26,.7)}
+  .pick input:checked + span::before{border-color:#fff;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A4161A' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center/10px no-repeat}
+  .pick input:focus-visible + span{outline:2px solid var(--red);outline-offset:3px}
+  @media (max-width:600px){ .pick-list{gap:8px} .pick span{padding:8px 12px;font-size:.8rem;gap:6px} .pick span::before{width:12px;height:12px} }
+  .form textarea[data-autosize]{resize:none;overflow:hidden;min-height:140px;padding-bottom:34px;line-height:1.6}
+
+  /* =========================================================
+     LIGHT — the site glows like a creator's set: ring light, REC dot, lit cards
+     ========================================================= */
+  ::selection{background:var(--red);color:#fff}
+  input,textarea,select{caret-color:var(--red);accent-color:var(--red)}
+
+  /* 1 · ring light behind the hero photo: switches on once, then breathes */
+  .hero-visual .ring-light{position:absolute;z-index:1;width:min(78%,400px);aspect-ratio:1;right:-9%;top:-7%;border-radius:50%;pointer-events:none;
+    opacity:0;animation:ringOn 1.6s 1.25s cubic-bezier(.16,1,.3,1) forwards}
+  .ring-light::before{content:"";position:absolute;inset:0;border-radius:50%;
+    background:radial-gradient(circle,transparent 57%,rgba(255,236,226,.95) 59.5%,#fff 61.5%,rgba(255,214,204,.95) 64%,transparent 66.5%);
+    filter:drop-shadow(0 0 10px rgba(255,190,180,.9)) drop-shadow(0 0 34px rgba(229,72,77,.55))}
+  .ring-light i{position:absolute;inset:-14%;border-radius:50%;background:radial-gradient(circle,rgba(255,170,160,.0) 40%,rgba(255,160,150,.32) 58%,rgba(229,72,77,.18) 68%,transparent 76%);filter:blur(8px)}
+  .glow-on .ring-light i{animation:ringBreathe 5.5s ease-in-out infinite}
+  .hero-visual .frame{z-index:2}
+  .hero-visual .frame::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;mix-blend-mode:soft-light;opacity:0;
+    background:radial-gradient(120% 90% at 85% 8%,rgba(255,236,226,.9),transparent 55%);animation:washOn 1.6s 1.45s cubic-bezier(.16,1,.3,1) forwards}
+  @keyframes ringOn{0%{opacity:0;transform:scale(.92)}18%{opacity:.85}26%{opacity:.25}38%{opacity:1}100%{opacity:1;transform:none}}
+  @keyframes ringBreathe{50%{opacity:.55;transform:scale(1.04)}}
+  @keyframes washOn{to{opacity:.8}}
+
+  /* 2 · the red dot of the hero titles glows like a camera's REC light */
+  .hero h1 .dot,.pf2-hero h1 .dot{display:inline-block;text-shadow:0 0 14px rgba(229,40,46,.75),0 2px 4px rgba(164,22,26,.35)}
+  .glow-on h1 .dot{animation:recBlink 2.4s ease-in-out infinite}
+  @keyframes recBlink{0%,100%{opacity:1}55%{opacity:.35;text-shadow:0 0 4px rgba(229,40,46,.3)}}
+
+  /* 3 · red buttons: a sweep of light + warm glow on hover */
+  .btn-red::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:45%;pointer-events:none;
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,.38),transparent);transform:skewX(-18deg);transition:none}
+  .btn-red:hover::after{left:125%;transition:left .75s cubic-bezier(.16,1,.3,1)}
+  .btn-red:hover{box-shadow:0 18px 34px -14px rgba(164,22,26,.75),0 8px 26px -8px rgba(229,72,77,.45)}
+  .btn-red:focus-visible{outline:none;box-shadow:0 0 0 3px #fff,0 0 0 5px var(--red),0 10px 28px -8px rgba(229,72,77,.6)}
+
+  /* 4 · cards catch a soft spotlight that follows the cursor */
+  .glow-card{position:relative;isolation:isolate}
+  .glow-card > .spot{position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:3;opacity:0;transition:opacity .45s;
+    background:radial-gradient(320px circle at var(--mx,50%) var(--my,50%),rgba(229,72,77,.13),rgba(229,72,77,.04) 45%,transparent 65%)}
+  .glow-card:hover > .spot{opacity:1}
+  .glow-card.dark-spot > .spot{mix-blend-mode:screen;background:radial-gradient(300px circle at var(--mx,50%) var(--my,50%),rgba(255,190,180,.34),rgba(255,150,140,.08) 45%,transparent 65%)}
+  .wy:hover,.quote:hover{box-shadow:0 30px 50px -28px rgba(164,22,26,.45),0 0 0 1px rgba(229,72,77,.18)}
+
+  /* 5 · the phone screen spills its colour onto the page */
+  .phone-wrap{isolation:isolate}
+  .phone-wrap::before{content:"";position:absolute;left:50%;top:50%;width:150%;height:105%;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;z-index:-1;
+    background:radial-gradient(closest-side,color-mix(in srgb,var(--glow,#A4161A) 46%,transparent),transparent 72%);filter:blur(14px);transition:background .9s ease}
+  .glow-on.phone-wrap::before{animation:screenSpill 4.8s ease-in-out infinite}
+  @keyframes screenSpill{50%{opacity:.7}}
+
+  /* 6 · big numbers carry a little light */
+  .stat-item .num{text-shadow:0 0 28px rgba(255,255,255,.28)}
+  .bdg b{text-shadow:0 0 18px rgba(229,72,77,.25)}
+
+  @media (prefers-reduced-motion:reduce){
+    .hero-visual .ring-light,.hero-visual .frame::after{animation:none;opacity:1}
+    .glow-on .ring-light i,.glow-on h1 .dot,.glow-on.phone-wrap::before{animation:none}
+    .btn-red:hover::after{transition:none;left:-60%}
+  }
+
+  /* ---------- Why UGC: a visible note page + cards that narrate it ---------- */
+  .why-ugc .paper{background:#FFF8F5;border:1px solid var(--blush-2);border-radius:6px 6px 14px 14px;
+    background-image:linear-gradient(90deg,transparent 30px,rgba(229,72,77,.35) 30px,rgba(229,72,77,.35) 31.5px,transparent 31.5px),repeating-linear-gradient(180deg,transparent 0 31px,rgba(164,22,26,.08) 31px 32px);
+    background-position:0 0,0 34px;padding-left:52px;
+    box-shadow:0 26px 44px -26px rgba(122,15,18,.42),0 2px 0 #F3E3DE,0 4px 0 #EFDAD4}
+  .why-ugc .paper p{line-height:32px}
+  .hlp{background:linear-gradient(transparent 56%,rgba(229,72,77,.26) 56%,rgba(229,72,77,.26) 92%,transparent 92%) no-repeat 0 0/0% 100%;
+    -webkit-box-decoration-break:clone;box-decoration-break:clone;transition:background-size .8s cubic-bezier(.16,1,.3,1),color .4s}
+  .hlp.on{background-size:100% 100%;color:var(--ink);font-weight:500}
+  .ugc-points .up{cursor:pointer;outline:none;overflow:hidden;transition:transform .5s cubic-bezier(.16,1,.3,1),background .4s,border-color .4s,box-shadow .5s}
+  .ugc-points .up:not(.on){opacity:.82}
+  .ugc-points .up.on{opacity:1;transform:translateY(-6px);background:#fff;border-color:rgba(164,22,26,.35);box-shadow:0 22px 34px -20px rgba(164,22,26,.5),0 0 0 4px rgba(229,72,77,.08)}
+  .ugc-points .up:focus-visible{box-shadow:0 0 0 3px #fff,0 0 0 5px var(--red)}
+  .ugc-points .up::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--red),#E5484D);transform:scaleX(0);transform-origin:left}
+  .ugc-points.auto .up.on::after{animation:upTimer 4.2s linear forwards}
+  @keyframes upTimer{to{transform:scaleX(1)}}
+  @media (max-width:640px){ .why-ugc .paper{padding-left:44px;background-position:0 0,0 28px;background-image:linear-gradient(90deg,transparent 24px,rgba(229,72,77,.35) 24px,rgba(229,72,77,.35) 25.5px,transparent 25.5px),repeating-linear-gradient(180deg,transparent 0 31px,rgba(164,22,26,.08) 31px 32px)} }
+  @media (prefers-reduced-motion:reduce){ .hlp{transition:none} .ugc-points .up{transition:none} }
+
+  /* =========================================================
+     SECTION FIT — every main section ≈ one screen (≤ ~1.5 when content is long)
+     phones: stacked card grids become swipeable rows with dots
+     ========================================================= */
+  .swipe-dots{display:none}
+  .page section[id],.page [id].sec{scroll-margin-top:76px}
+  @media (max-width:640px){
+    .sec{padding:64px 0}
+    .projects,.pack-grid,.quotes,.love-grid,.w3-grid{display:flex!important;grid-template-columns:none!important;max-width:none!important;overflow-x:auto;overflow-y:visible;
+      scroll-snap-type:x mandatory;gap:14px!important;margin-inline:-16px!important;padding:14px 16px 10px!important;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+    .projects::-webkit-scrollbar,.pack-grid::-webkit-scrollbar,.quotes::-webkit-scrollbar,.love-grid::-webkit-scrollbar,.w3-grid::-webkit-scrollbar{display:none}
+    .projects > *,.pack-grid > *,.quotes > *,.love-grid > *,.w3-grid > *{flex:0 0 82%;scroll-snap-align:center;min-width:0}
+    .love-grid > *{flex-basis:62%}
+    .projects{margin-top:26px}
+    .swipe-dots{display:flex;justify-content:center;gap:7px;margin-top:6px}
+    .swipe-dots i{width:7px;height:7px;border-radius:999px;background:var(--blush-2);transition:width .35s cubic-bezier(.16,1,.3,1),background .35s}
+    .swipe-dots i.on{width:22px;background:var(--red)}
+    /* home hero */
+    .hero-visual{height:300px!important}
+    .hero h1{font-size:clamp(1.85rem,8.6vw,2.4rem)!important;margin-bottom:16px!important}
+    .hero-ctas{margin-top:18px}
+    /* home "Hello! I'm Aurely" */
+    .about-photo{height:300px!important;margin-right:12px}
+    /* why UGC: the three ideas side by side */
+    .ugc-points{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}
+    .ugc-points .up{display:block!important;text-align:center!important;padding:10px 6px!important;font-size:.72rem}
+    .ugc-points .up-art{margin:0 auto 6px!important;height:38px;max-width:86px}
+    .why-ugc .lead{font-size:1.15rem;margin-top:14px}
+    .why-ugc .paper p{font-size:.88rem;line-height:28px}
+    .why-ugc .paper{background-position:0 0,0 30px}
+    /* why work with me */
+    .why-photo-1{height:240px!important}
+    .why-photo-2{display:none!important}
+    .pills{grid-template-columns:1fr 1fr!important;gap:10px!important;margin:30px 0!important}
+    .pills > *{font-size:.78rem;padding:10px 12px}
+    .why-2{margin-top:0}
+    /* rates */
+    .pack.rate{padding:24px 22px 22px}
+    .web-band{padding:22px 20px!important;gap:14px}
+    /* services list: each service ≈ one screen */
+    .sp-visual{height:230px!important}
+    .sp-photo{padding-top:16px!important}
+    .sp-row .art{transform:scale(.8);transform-origin:center bottom}
+    .sp-row ul.incl{grid-template-columns:1fr 1fr;gap:6px 12px;font-size:.84rem}
+    /* about page */
+    .portrait{width:min(250px,72%)!important}
+    .love{height:190px!important}
+    /* portfolio */
+    .phone-wrap .phone{width:248px!important;height:510px!important}
+    .feed-info > p{display:none}
+    .cs-media{height:170px}
+  }
+  @media (min-width:1100px){
+    .pack-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;max-width:none!important;gap:20px!important}
+  }
+  /* second pass: trim spacing so long sections stay within ~1.5 screens */
+  @media (min-width:641px){
+    .sec{padding-top:clamp(64px,10vh,110px);padding-bottom:clamp(64px,10vh,110px)}
+    #services .intro{margin-bottom:24px}
+    #services .pack-grid,#packs .pack-grid{margin-top:30px}
+    .rates-foot{margin-top:22px!important}
+    .web-band{margin-top:22px!important}
+    .center-btn{margin-top:28px!important}
+    .pack.rate{padding-top:28px;padding-bottom:24px}
+    .why-photo-1{height:300px!important}.why-photo-2{height:320px!important}
+    .pills{margin:30px 0!important}
+    #contact .banner{margin-bottom:34px}
+  }
+  @media (max-width:640px){
+    .hero{padding-top:100px!important;padding-bottom:48px!important}
+    .hero-text > p{margin-bottom:20px!important}
+    .hero-ctas{margin-top:10px!important}
+    #services .intro{margin-bottom:12px}
+    #services .pack-grid,#packs .pack-grid{margin-top:10px}
+    .rates-foot{margin-top:14px!important}
+    .web-band{margin-top:16px!important}
+    .center-btn{margin-top:22px!important}
+    .pack.rate > p{font-size:.86rem;margin-bottom:12px}
+    .pack.rate .price{margin:10px 0}
+    #contact .banner{padding:22px 20px!important;margin-bottom:28px!important}
+    #contact .banner .geo{display:none}
+    .story-head{margin-bottom:18px!important}
+    .story-tabs{margin-bottom:16px!important}
+    .story-card{padding:20px 18px!important}
+    .cs-media{height:150px!important}
+    .highlights{margin:12px 0 16px!important}
+    .now{padding:14px 16px!important}
+    .now .now-k{margin-bottom:4px}
+    .sp-text .num{display:none}
+    .sp-row{padding-top:28px!important;padding-bottom:28px!important}
+    .sp-text p{margin-bottom:14px!important}
+    .sp-row ul.incl{margin-bottom:16px!important}
+    .am-hero{padding-bottom:44px!important}
+    .table-head{margin-bottom:14px}
+    .why-photo-1{display:none!important}
+    .web-band > div:first-child p{display:none}
+    .highlights{flex-wrap:nowrap!important;justify-content:flex-start!important;overflow-x:auto;scrollbar-width:none;margin-inline:-16px!important;padding:4px 16px!important}
+    .highlights::-webkit-scrollbar{display:none}
+    .highlights .hl{flex:none}
+    .hero-visual{height:260px!important}
+    .about-photo{height:250px!important}
+    /* long texts fold on phones, with a "Read more" toggle */
+    .fold{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:var(--lines,5);overflow:hidden;position:relative}
+    .fold.open{display:block;-webkit-line-clamp:unset}
+    .fold-btn{all:unset;cursor:pointer;display:flex;width:max-content;align-items:center;gap:6px;margin:8px 0 14px;font-size:.84rem;font-weight:600;color:var(--red);text-decoration:underline;text-underline-offset:4px}
+    .fold-btn:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:4px}
+  }
+  @media (min-width:641px){ .fold-btn{display:none} }
+  @media (min-width:641px){
+    .why-photo-1{height:340px}
+    .why-photo-2{height:360px}
+    .pills{margin:44px 0}
+  }
+
+  /* =========================================================
+     PAGE TRANSITION — a cherry curtain rises, names the next page, then lifts
+     ========================================================= */
+  .page.active{animation:pageFade .5s ease both!important}
+  @keyframes pageFade{from{opacity:0}}
+  .curtain{position:fixed;inset:0;z-index:300;pointer-events:none;visibility:hidden}
+  .curtain.run{visibility:visible;pointer-events:auto}
+  .curtain .cu{position:absolute;inset:0;clip-path:inset(100% 0 0 0);will-change:clip-path}
+  .curtain .cu-a{background:#F3D9D6}
+  .curtain .cu-b{background:radial-gradient(120% 80% at 50% 110%,#C21D23 0%,#A4161A 45%,#6E0C10 100%);display:grid;place-items:center}
+  .curtain.in .cu{clip-path:inset(0 0 0 0);transition:clip-path .62s cubic-bezier(.76,0,.24,1)}
+  .curtain.in .cu-b{transition-delay:.07s}
+  .curtain.out .cu{clip-path:inset(0 0 100% 0);transition:clip-path .7s cubic-bezier(.76,0,.24,1)}
+  .curtain.out .cu-a{transition-delay:.09s}
+  .cu-inner{display:flex;flex-direction:column;align-items:center;gap:14px;color:#fff;text-align:center;opacity:0;transform:translateY(22px);transition:opacity .35s ease,transform .6s cubic-bezier(.16,1,.3,1)}
+  .curtain.in .cu-inner{opacity:1;transform:none;transition-delay:.3s}
+  .curtain.out .cu-inner{opacity:0;transform:translateY(-26px);transition:opacity .25s ease,transform .45s cubic-bezier(.7,0,.84,0)}
+  .cu-inner img{height:54px;width:auto;filter:brightness(0) invert(1)}
+  .cu-name{font-family:var(--f-head);font-size:clamp(2rem,6vw,3.4rem);font-weight:500;letter-spacing:-.03em;line-height:1}
+  .cu-name i{font-style:normal;color:#F7B7B4}
+  .cu-line{width:64px;height:2px;border-radius:2px;background:rgba(255,255,255,.35);overflow:hidden;position:relative}
+  .cu-line::after{content:"";position:absolute;inset:0;background:#fff;transform:scaleX(0);transform-origin:left}
+  .curtain.in .cu-line::after{transform:scaleX(1);transition:transform .55s .3s cubic-bezier(.16,1,.3,1)}
+  @media (prefers-reduced-motion:reduce){
+    .curtain .cu,.curtain.in .cu,.curtain.out .cu{clip-path:none;transition:opacity .2s}
+    .curtain .cu{opacity:0}.curtain.in .cu{opacity:1}.curtain.out .cu{opacity:0}
+    .cu-inner,.curtain.in .cu-inner{transform:none}
+  }
+
+  /* ---------- Typography: Fraunces (headings) + Inter (text) ---------- */
+  body{font-family:var(--f-body);font-weight:400;letter-spacing:-.011em;font-feature-settings:'cv11','ss01';font-optical-sizing:auto}
   b,strong,.btn,h4,h5,.links a,label{font-weight:500}
   h1,h2,h3{font-family:var(--f-head);font-weight:500;letter-spacing:-.02em;font-optical-sizing:auto}
   .kick{text-transform:none!important;font-weight:500;letter-spacing:-.03em;font-size:clamp(2.4rem,6.4vw,4.8rem)!important;line-height:1.02!important}
   .r-name,.names span,.stat-item .num,.pack.rate .price strong{text-transform:none;font-weight:500;letter-spacing:-.02em}
   .type,.stat-item .lbl,.stat-foot,.r-tag,.names-label,.pack.rate .price small,.pack.rate ul.rows,.cs-place,.paper p,.sc-head{letter-spacing:.02em}
-  .paper p{font-weight:300}
+  .paper p{font-weight:400}
 
   /* ---------- Embedded photos & logos (each stored once) ---------- */
   .img{width:100%;height:100%;background-size:cover;background-position:50% 20%;background-repeat:no-repeat;transition:transform 1.4s var(--ease)}
@@ -1713,6 +2038,7 @@
       <div class="blob"></div>
       <div class="geo g-dash" style="width:130px;height:130px;left:-4%;top:-5%;z-index:3"></div>
       <div class="geo g-square" style="width:54px;height:54px;right:-2%;bottom:6%;z-index:3"></div>
+      <div class="ring-light" aria-hidden="true"><i></i></div>
       <div class="frame"><div class="img im-blazer" role="img" aria-label="Aurely smiling in a red blazer"></div></div>
       <div class="chip chip-1">
         <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
@@ -1840,7 +2166,7 @@
   <div class="wrap split">
     <div class="reveal from-left">
       <h2 class="title"><span class="script">Hello!</span>I'm Aurely.</h2>
-      <p>I'm Aurely Mbouchéko — wife, mom, UGC creator and founder of Mac &amp; Made Agency in Cameroon, now based in Atlanta. I have a deep love for fashion, lifestyle and authentic storytelling. Over the past 3 years, I've had the privilege of working with 30+ brands across Cameroon, France and now the United States. My multicultural journey shaped the way I create: I love blending clean visuals, emotion, and real-life moments to bring brand stories to life. Creating content isn't just a job for me — it's a way to help businesses connect with their audience in a genuine, meaningful way.</p>
+      <p>I'm Aurely Made — wife, mom, UGC creator and entrepreneur, now based in Atlanta after a journey from Cameroon to France. I have a deep love for fashion, lifestyle and authentic storytelling. Over the past 3 years, I've had the privilege of working with 30+ brands across Cameroon, France and now the United States. My multicultural journey shaped the way I create: I love blending clean visuals, emotion, and real-life moments to bring brand stories to life. Creating content isn't just a job for me — it's a way to help businesses connect with their audience in a genuine, meaningful way.</p>
       <a href="#about-me" class="btn btn-red">Learn more about me
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
@@ -1863,12 +2189,12 @@
     </div>
     <div class="reveal from-right">
       <div class="paper">
-        <p><b>User Generated Content</b> is a means to forge genuine connections between brands and audiences. I focus on storytelling that reflects customers' perspectives, leveraging my multicultural background and experience to create relatable content. My goal is to bring brands to life authentically, fostering trust and engagement, and helping them stand out in impactful ways.</p>
+        <p><b>User Generated Content</b> is a means to forge <span class="hlp" data-k="connect">genuine connections</span> between brands and audiences. I focus on <span class="hlp" data-k="story">storytelling that reflects customers' perspectives</span>, leveraging my multicultural background and experience to create relatable content. My goal is to bring brands to life authentically, <span class="hlp" data-k="trust">fostering trust and engagement</span>, and helping them stand out in impactful ways.</p>
       </div>
       <div class="ugc-points">
-        <div><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17l-1.5 1.5a2.1 2.1 0 01-3-3L9 13M13 7l1.5-1.5a2.1 2.1 0 013 3L15 11M8 16l8-8"/></svg>Genuine connections</div>
-        <div><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Relatable storytelling</div>
-        <div><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.4-9.3-9C1 8.5 3 5 6.5 5c2 0 3.5 1.2 5.5 3.3C14 6.2 15.5 5 17.5 5 21 5 23 8.5 21.3 12 19 16.6 12 21 12 21z"/></svg>Trust &amp; engagement</div>
+        <div class="up up-connect" data-k="connect" tabindex="0"><span class="up-art" aria-hidden="true"><svg viewBox="0 0 120 48"><path class="lk" d="M27 24 C 48 2, 72 46, 93 24" pathLength="1"/><circle class="n1" cx="18" cy="24" r="8"/><circle class="n2" cx="102" cy="24" r="8"/><circle class="sp" cx="60" cy="24" r="4.5"/></svg></span>Genuine connections</div>
+        <div class="up up-story" data-k="story" tabindex="0"><span class="up-art" aria-hidden="true"><span class="bub b1"><i></i><i></i><i></i></span><span class="bub b2"><i></i><i></i></span></span>Relatable storytelling</div>
+        <div class="up up-trust" data-k="trust" tabindex="0"><span class="up-art" aria-hidden="true"><svg class="ht" viewBox="0 0 24 24"><path class="ho" d="M12 21s-7-4.4-9.3-9C1 8.5 3 5 6.5 5c2 0 3.5 1.2 5.5 3.3C14 6.2 15.5 5 17.5 5 21 5 23 8.5 21.3 12 19 16.6 12 21 12 21z"/><path class="hf" d="M12 21s-7-4.4-9.3-9C1 8.5 3 5 6.5 5c2 0 3.5 1.2 5.5 3.3C14 6.2 15.5 5 17.5 5 21 5 23 8.5 21.3 12 19 16.6 12 21 12 21z"/></svg><span class="mh m1">♥</span><span class="mh m2">♥</span><span class="mh m3">♥</span></span>Trust &amp; engagement</div>
       </div>
     </div>
   </div>
@@ -2015,6 +2341,22 @@
         <input type="email" name="email" placeholder="Email *" required>
         <input type="text" name="instagram" placeholder="Instagram (Optional)">
       </div>
+      <fieldset class="svc-pick">
+        <legend><span>Services you're interested in</span><small>Choose one or more</small><button type="button" class="pick-all" id="pickAll">Select all</button></legend>
+        <div class="pick-list">
+          <label class="pick"><input type="checkbox" name="services" value="UGC Photos & Videos"><span>UGC Photos &amp; Videos</span></label>
+          <label class="pick"><input type="checkbox" name="services" value="Concept & Scripting"><span>Concept &amp; Scripting</span></label>
+          <label class="pick"><input type="checkbox" name="services" value="Testimonials & Reviews"><span>Testimonials &amp; Reviews</span></label>
+          <label class="pick"><input type="checkbox" name="services" value="ASMR & Unboxing"><span>ASMR &amp; Unboxing</span></label>
+          <label class="pick"><input type="checkbox" name="services" value="Photos"><span>Photos</span></label>
+          <label class="pick"><input type="checkbox" name="services" value="Organic Videos"><span>Organic Videos</span></label>
+          <label class="pick"><input type="checkbox" name="services" value="Usage Rights"><span>Usage Rights</span></label>
+          <label class="pick"><input type="checkbox" name="services" value="Web Design"><span>Web Design</span></label>
+          <label class="pick"><input type="checkbox" name="services" value="UX Design"><span>UX Design</span></label>
+          <label class="pick"><input type="checkbox" name="services" value="UX Audit"><span>UX Audit</span></label>
+          <label class="pick"><input type="checkbox" name="services" value="Not sure yet"><span>Not sure yet</span></label>
+        </div>
+      </fieldset>
       <div class="select">
         <select name="budget" onchange="this.classList.add('chosen')">
           <option value="" selected disabled>Budget Range</option>
@@ -2024,7 +2366,7 @@
           <option>$500+</option>
         </select>
       </div>
-      <textarea name="details" placeholder="Project details"></textarea>
+      <textarea name="details" placeholder="Project details" rows="4" data-autosize></textarea>
       <button class="btn btn-red" type="submit">Send inquiry
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
       <div class="form-note" id="formNote">Thank you! Your inquiry has been sent — Aurely will get back to you soon. ♥</div>
@@ -2708,9 +3050,9 @@
         <div class="leaf pg">
           <div class="pg-head"><span>Identity · Identité</span><span>No. AM-2026</span></div>
           <div class="idp">
-            <div class="id-photo"><div class="img im-face" role="img" aria-label="Aurely Mbouchéko"></div></div>
+            <div class="id-photo"><div class="img im-face" role="img" aria-label="Aurely Made"></div></div>
             <div class="id-fields">
-              <div class="fld"><small>Surname / Nom</small><b>MBOUCHÉKO</b></div>
+              <div class="fld"><small>Surname / Nom</small><b>MADE</b></div>
               <div class="fld"><small>Given name / Prénom</small><b>AURELY</b></div>
               <div class="fld"><small>Profession</small><b>UGC Creator</b></div>
               <div class="fld"><small>Based in / Résidence</small><b>Atlanta, Georgia</b></div>
@@ -2726,7 +3068,7 @@
             <div><div class="fld"><small>Signature</small></div><div class="sig">Aurely Made</div></div>
             <div class="id-seal">AURELY<br>MADE<br>✦ UGC ✦</div>
           </div>
-          <div class="mrz">P&lt;UGCMBOUCHEKO&lt;&lt;AURELY&lt;MADE&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br>LIFESTYLE&lt;FASHION&lt;FITNESS&lt;&lt;30&lt;BRANDS&lt;&lt;</div>
+          <div class="mrz">P&lt;UGCMADE&lt;&lt;AURELY&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br>LIFESTYLE&lt;FASHION&lt;FITNESS&lt;&lt;30&lt;BRANDS&lt;&lt;</div>
           <span class="pg-num">01</span>
         </div>
 
@@ -2758,6 +3100,15 @@
           <span class="pg-num">03</span>
         </div>
 
+        <!-- PAGE: brands she worked with -->
+        <div class="leaf pg">
+          <div class="pg-head"><span>Visas · Brands</span><span>30+</span></div>
+          <div class="bv-grid"><div class="bv" style="--r:-6deg"><span class="bv-logo"><div class="img im-coco" role="img" aria-label="Coco Beach"></div></span><b>Coco Beach</b></div><div class="bv" style="--r:4deg"><span class="bv-logo"><div class="img im-tontons" role="img" aria-label="Les Tontons Afro"></div></span><b>Les Tontons Afro</b></div><div class="bv" style="--r:-3deg"><span class="bv-logo"><div class="img im-bold" role="img" aria-label="Bold Makeup"></div></span><b>Bold Makeup</b></div><div class="bv" style="--r:5deg"><span class="bv-logo"><div class="img im-bouche" role="img" aria-label="La Bouche'Rit"></div></span><b>La Bouche'Rit</b></div><div class="bv" style="--r:-4deg"><span class="bv-logo"><div class="img im-sophie" role="img" aria-label="Sophie Glamour"></div></span><b>Sophie Glamour</b></div><div class="bv" style="--r:3deg"><span class="bv-logo"><div class="img im-food" role="img" aria-label="Food Station"></div></span><b>Food Station</b></div></div>
+          <p class="bv-more">…and many more:</p>
+          <div class="bv-list"><span style="--r:-2deg">Vera Wang × Ulta Beauty</span><span style="--r:1deg">Love Philosophy</span><span style="--r:-1deg">Chivas Regal</span><span style="--r:2deg">Tagidor Garden</span><span style="--r:-2deg">30 Seconds Cleaners</span><span style="--r:1deg">African Anti-Aging</span><span style="--r:2deg">Bare Organics</span><span style="--r:-1deg">Maison Nasom</span><span style="--r:1deg">Biopur Paris</span><span style="--r:-2deg">CLRS Sneakers</span><span style="--r:2deg">Charming and Main</span><span style="--r:-1deg">Origen Fragrances</span></div>
+          <span class="pg-num">04</span>
+        </div>
+
         <!-- PAGE 4: next destination -->
         <div class="leaf pg">
           <div class="pg-head"><span>Next destination</span><span>✈</span></div>
@@ -2767,7 +3118,7 @@
             <p>Tap the circle to stamp it — then let's create something beautiful together.</p>
             <div class="row"><a href="#contact" class="btn btn-red">Work with me</a><button type="button" class="btn-ghost" id="ppClose">Close passport ↺</button></div>
           </div>
-          <span class="pg-num">04</span>
+          <span class="pg-num">05</span>
         </div>
       </div>
       </div>
@@ -3437,11 +3788,29 @@
   }));
 
   // Contact form confirmation (connect to Formspree to actually receive messages)
+  /* contact form: grow the "Project details" box with the text (no manual resize) */
+  document.querySelectorAll('textarea[data-autosize]').forEach(ta => {
+    const fit = () => { if (!ta.offsetParent) return; ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; };
+    ta.addEventListener('input', fit); addEventListener('resize', fit); fit();
+  });
+  /* contact form: "Select all" services */
+  (function(){
+    const btn = document.getElementById('pickAll'); if (!btn) return;
+    const boxes = [...document.querySelectorAll('.svc-pick input[type=checkbox]')].filter(b => b.value !== 'Not sure yet');
+    const sync = () => { const all = boxes.every(b => b.checked); btn.textContent = tr(all ? 'Clear all' : 'Select all'); btn.dataset.all = all ? '1' : ''; };
+    btn.addEventListener('click', () => { const all = btn.dataset.all === '1'; boxes.forEach(b => b.checked = !all); const ns = document.querySelector('.svc-pick input[value="Not sure yet"]'); if (ns && !all) ns.checked = false; sync(); });
+    const notSure = document.querySelector('.svc-pick input[value="Not sure yet"]');
+    // "Not sure yet" is exclusive: picking it clears the services, picking a service clears it
+    if (notSure) notSure.addEventListener('change', () => { if (notSure.checked) boxes.forEach(b => b.checked = false); });
+    boxes.forEach(b => b.addEventListener('change', () => { if (b.checked && notSure) notSure.checked = false; }));
+    document.querySelectorAll('.svc-pick input').forEach(b => b.addEventListener('change', sync));
+    window.__pickSync = sync;
+  })();
   function sendInquiry(e){
     e.preventDefault();
     const note = document.getElementById('formNote');
     e.target.querySelectorAll('input,select,textarea,button').forEach(el => el.style.display = 'none');
-    e.target.querySelectorAll('.row,.select').forEach(el => el.style.display = 'none');
+    e.target.querySelectorAll('.row,.select,.svc-pick').forEach(el => el.style.display = 'none');
     note.style.display = 'block';
     return false;
   }
@@ -3799,20 +4168,33 @@
     const leaves = [...book.querySelectorAll('.leaf')], N = leaves.length;
     const label = document.getElementById('ppLabel'), dots = document.getElementById('ppDots');
     const prev = document.getElementById('ppPrev'), next = document.getElementById('ppNext');
-    const NAMES = ['Cover', 'Identity', 'Journey', 'Four words', 'Next stop'];
+    const NAMES = ['Cover', 'Identity', 'Journey', 'Four words', 'Brands', 'Next stop'];
     let cur = 0;
     leaves.forEach((l, i) => { l.style.zIndex = N - i; const d = document.createElement('i'); d.addEventListener('click', e => { e.stopPropagation(); go(i); }); dots.appendChild(d); });
-    function go(i){
+    leaves.forEach(l => { const s = document.createElement('span'); s.className = 'shade'; s.setAttribute('aria-hidden', 'true'); l.appendChild(s); });
+    let lastGo = 0;
+    function go(i, force){
       i = Math.max(0, Math.min(N - 1, i));
-      cur = i;
-      leaves.forEach((l, k) => { l.classList.toggle('turned', k < i); l.classList.toggle('here', k === i); });
+      const now = performance.now();
+      if (!force && i !== cur && now - lastGo < 450) return;   // ignore accidental double taps mid-turn
+      lastGo = now;
+      const from = cur; cur = i;
+      // pages that change side turn one after another, so a long jump flips like a real booklet
+      const moving = leaves.map((l, k) => (k < i) !== l.classList.contains('turned') ? k : -1).filter(k => k >= 0);
+      if (i < from) moving.reverse();
+      leaves.forEach((l, k) => {
+        const n = moving.indexOf(k);
+        l.style.setProperty('--d', n > 0 ? (n * .18) + 's' : '0s');
+        if (n >= 0){ l.classList.add('flipping'); clearTimeout(l._ft); l._ft = setTimeout(() => l.classList.remove('flipping'), 1500 + n * 180); }
+        l.classList.toggle('turned', k < i); l.classList.toggle('here', k === i);
+      });
       root.classList.toggle('closed', i === 0);
       [...dots.children].forEach((d, k) => d.classList.toggle('on', k === i));
       label.textContent = tr(NAMES[i]) + (i ? ' · ' + i + '/' + (N - 1) : '');
       prev.disabled = i === 0; next.disabled = i === N - 1;
       if (i === 2){ const a = document.getElementById('ppPlane'); try { a.beginElement(); } catch (e) {} }
     }
-    window.__ppRefresh = () => go(cur);
+    window.__ppRefresh = () => go(cur, true);
     prev.addEventListener('click', () => go(cur - 1));
     next.addEventListener('click', () => go(cur + 1));
     document.getElementById('ppClose').addEventListener('click', e => { e.stopPropagation(); go(0); });
@@ -3853,7 +4235,87 @@
       });
       book.addEventListener('mouseleave', () => { tilt.style.setProperty('--tx', '0deg'); tilt.style.setProperty('--ty', '0deg'); });
     }
-    go(0);
+    // shrink the whole passport (+ its controls) so it always fits the visible phone screen
+    const ctrl = root.querySelector('.ppx-ctrl');
+    function fit(){
+      const vh = window.visualViewport ? visualViewport.height : innerHeight;
+      const bookH = book.offsetHeight, gap = 18, ctrlH = ctrl.offsetHeight;
+      if (!bookH) return;                                    // About page not shown yet
+      const nav = document.querySelector('.nav'), navH = nav ? nav.getBoundingClientRect().height : 0;
+      const s = Math.max(.5, Math.min(1, (vh - navH - 24 - gap - ctrlH) / bookH));
+      tilt.style.setProperty('--pps', s.toFixed(3));
+      tilt.style.setProperty('--ppH', bookH + 'px');
+    }
+    fit();
+    addEventListener('resize', fit);
+    if ('IntersectionObserver' in window) new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) fit(); }, {rootMargin:'400px 0px'}).observe(root);
+    addEventListener('orientationchange', () => setTimeout(fit, 250));
+    if (window.visualViewport) visualViewport.addEventListener('resize', fit);
+    // hide the round "back to top" button while the passport is on screen (it would cover the arrows)
+    if ('IntersectionObserver' in window){
+      new IntersectionObserver(es => es.forEach(e => document.body.classList.toggle('pp-in-view', e.isIntersecting)), {threshold:.35}).observe(root);
+    }
+    go(0, true);
+  })();
+
+  /* ---------- Scroll lock: once 2/3 of the passport (or the polaroid table) is on screen,
+     the page settles on it, shows how to use it, and holds the scroll for a moment ---------- */
+  (function(){
+    const touch = matchMedia('(hover:none), (pointer:coarse)').matches;
+    const targets = [
+      {el: document.querySelector('.ppx'), ic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 012-2h12v18H6a2 2 0 01-2-2z"/><path d="M8 3v18"/></svg>',
+        text: touch ? 'Tap or swipe the passport to turn the pages' : 'Click the passport or use the arrows to turn the pages'},
+      {el: document.getElementById('table'), ic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11V5a2 2 0 014 0v6M13 10a2 2 0 014 0v2M17 11a2 2 0 014 0v3a7 7 0 01-7 7h-1a7 7 0 01-6-3.4L4 13a2 2 0 013.4-2L9 13"/></svg>',
+        text: touch ? 'Press & hold a photo to move it — tap one to see it up close' : 'Drag the photos around — click one to see it up close'}
+    ].filter(t => t.el);
+    if (!targets.length) return;
+    const LOCK = 1400, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    targets.forEach(t => {
+      t.el.classList.add('lock-target');
+      t.armed = true;
+      const h = document.createElement('div'); h.className = 'lock-hint'; h.setAttribute('role', 'status');
+      t.hint = h; t.el.appendChild(h);
+      t.render = () => { h.innerHTML = '<span class="lh-ic">' + t.ic + '</span><span>' + tr(t.text) + '<small>' + tr('Scroll to continue') + ' ↓</small></span><span class="lh-bar"><i></i></span>'; };
+      t.render();
+      h.style.setProperty('--lock', LOCK + 'ms');
+    });
+    window.__lockHintsRefresh = () => targets.forEach(t => t.render());
+    // on phones, keep the round "back to top" button out of the way while a locked element is on screen
+    if ('IntersectionObserver' in window){
+      const seen = new Set();
+      const io = new IntersectionObserver(es => { es.forEach(e => e.isIntersecting ? seen.add(e.target) : seen.delete(e.target)); document.body.classList.toggle('lock-in-view', seen.size > 0); }, {threshold:.35});
+      targets.forEach(t => io.observe(t.el));
+    }
+    let lockedUntil = 0, idle = null, snapping = false;
+    const navH = () => { const n = document.querySelector('.nav'); return n ? n.getBoundingClientRect().height : 0; };
+    const visibleRatio = el => { const r = el.getBoundingClientRect(), top = Math.max(r.top, navH()), bot = Math.min(r.bottom, innerHeight); return Math.max(0, bot - top) / Math.max(1, r.height); };
+    function snap(t){
+      const r = t.el.getBoundingClientRect(), nh = navH(), avail = innerHeight - nh;
+      const offset = r.height <= avail ? nh + (avail - r.height) / 2 : nh + 8;
+      const y = Math.round(scrollY + r.top - offset);
+      t.armed = false; snapping = true;
+      scrollTo({top: y, behavior: reduce ? 'auto' : 'smooth'});
+      lockedUntil = performance.now() + LOCK + (reduce ? 0 : 450);
+      setTimeout(() => { snapping = false; t.hint.classList.remove('show'); void t.hint.offsetWidth; t.hint.classList.add('show'); }, reduce ? 0 : 420);
+      clearTimeout(t.hideT); t.hideT = setTimeout(() => t.hint.classList.remove('show'), LOCK + 3200);
+    }
+    function check(){
+      if (snapping) return;
+      targets.forEach(t => {
+        if (!t.el.offsetParent) return;                      // page not shown
+        const v = visibleRatio(t.el);
+        if (v < .12){ t.armed = true; t.hint.classList.remove('show'); }
+        else if (t.armed && v >= 2 / 3) snap(t);
+      });
+    }
+    addEventListener('scroll', () => { clearTimeout(idle); idle = setTimeout(check, 110); }, {passive:true});
+    // while locked, swallow scroll gestures (and nudge the hint so it's clear why)
+    const locked = () => performance.now() < lockedUntil;
+    const nudge = () => targets.forEach(t => { if (t.hint.classList.contains('show')){ t.hint.classList.remove('nudge'); void t.hint.offsetWidth; t.hint.classList.add('nudge'); } });
+    const block = e => { if (locked() && !snapping){ e.preventDefault(); nudge(); } else if (locked()) e.preventDefault(); };
+    addEventListener('wheel', block, {passive:false});
+    addEventListener('touchmove', e => { if (e.target.closest && e.target.closest('.ppx, #table')) return; block(e); }, {passive:false});
+    addEventListener('keydown', e => { if (locked() && ['ArrowDown','ArrowUp','PageDown','PageUp',' ','Home','End'].includes(e.key) && !/input|textarea|select/i.test(e.target.tagName)){ e.preventDefault(); nudge(); } });
   })();
 
 
@@ -3927,7 +4389,21 @@
     return true;
   }
 
+  // which page a hash belongs to (used to decide whether the page-change curtain should play)
+  function pageFor(h){
+    const ROOTS = {'': 'home', 'home': 'home', 'work': 'work', 'about-me': 'about', 'services-products': 'services'};
+    if (h.startsWith('work/')) return 'work';
+    if (h in ROOTS) return ROOTS[h];
+    const el = document.getElementById(h), pe = el && el.closest('.page');
+    return pe ? Object.keys(pages).find(k => pages[k] === pe) : 'home';
+  }
   function route(target){
+    const h = decodeURIComponent(target !== undefined ? target : location.hash.slice(1));
+    const dest = pageFor(h);
+    if (!activePage || dest === activePage || !window.__curtain) return _route(target);
+    window.__curtain(dest, () => _route(target));
+  }
+  function _route(target){
     const h = decodeURIComponent(target !== undefined ? target : location.hash.slice(1));
     const ROOTS = {'': 'home', 'home': 'home', 'work': 'work', 'about-me': 'about', 'services-products': 'services'};
     if (h.startsWith('work/')){
@@ -4290,11 +4766,9 @@
 "Countries": "Pays",
 "Instagram <b>6.2K</b> · X <b>5.4K</b> · Facebook <b>2.9K</b> · Threads <b>2.6K</b> · TikTok <b>1.1K</b>": "Instagram <b>6,2K</b> · X <b>5,4K</b> · Facebook <b>2,9K</b> · Threads <b>2,6K</b> · TikTok <b>1,1K</b>",
 "Previous UGC work for": "Ancien travail UGC pour",
-"I'm Aurely Mbouchéko — wife, mom, UGC creator and founder of Mac & Made Agency in Cameroon, now based in Atlanta. I have a deep love for fashion, lifestyle and authentic storytelling. Over the past 3 years, I've had the privilege of working with 30+ brands across Cameroon, France and now the United States. My multicultural journey shaped the way I create: I love blending clean visuals, emotion, and real-life moments to bring brand stories to life. Creating content isn't just a job for me — it's a way to help businesses connect with their audience in a genuine, meaningful way.": "Je suis Aurely Mbouchéko — épouse, maman, créatrice UGC et fondatrice de Mac & Made Agency au Cameroun, aujourd'hui installée à Atlanta. J'ai un profond amour pour la mode, le lifestyle et le storytelling authentique. Ces 3 dernières années, j'ai eu la chance de travailler avec plus de 30 marques au Cameroun, en France et aujourd'hui aux États-Unis. Mon parcours multiculturel a façonné ma façon de créer : j'aime mêler visuels épurés, émotion et moments de vie réelle pour donner vie à l'histoire des marques. Créer du contenu n'est pas qu'un métier pour moi — c'est une façon d'aider les entreprises à créer un lien sincère et profond avec leur audience.",
 "Why UGC?": "Pourquoi l'UGC ?",
 "Because people trust people.": "Parce qu'on fait confiance aux gens.",
 "Real people, real stories, real results — content that feels like a friend's recommendation, not another ad.": "De vraies personnes, de vraies histoires, de vrais résultats — du contenu qui sonne comme la recommandation d'une amie, pas comme une pub de plus.",
-"<b>User Generated Content</b> is a means to forge genuine connections between brands and audiences. I focus on storytelling that reflects customers' perspectives, leveraging my multicultural background and experience to create relatable content. My goal is to bring brands to life authentically, fostering trust and engagement, and helping them stand out in impactful ways.": "<b>Le contenu UGC</b> (contenu généré par les utilisateurs) crée des liens sincères entre les marques et leur audience. Je mise sur un storytelling qui reflète le point de vue des clients, en m'appuyant sur mon parcours multiculturel et mon expérience pour créer un contenu proche des gens. Mon objectif : donner vie aux marques avec authenticité, renforcer la confiance et l'engagement, et les aider à se démarquer.",
 "Genuine connections": "Des liens sincères",
 "Relatable storytelling": "Un storytelling proche des gens",
 "Trust & engagement": "Confiance & engagement",
@@ -4663,7 +5137,23 @@
 "Skincare": "Soin de la peau",
 "100% authentic": "100 % authentique",
 "Aurely Made - Your UGC Partner for": "Aurely Made - Votre partenaire UGC pour un contenu",
-", High-Converting Content": " qui convertit"
+", High-Converting Content": " qui convertit",
+"I'm Aurely Made — wife, mom, UGC creator and entrepreneur, now based in Atlanta after a journey from Cameroon to France. I have a deep love for fashion, lifestyle and authentic storytelling. Over the past 3 years, I've had the privilege of working with 30+ brands across Cameroon, France and now the United States. My multicultural journey shaped the way I create: I love blending clean visuals, emotion, and real-life moments to bring brand stories to life. Creating content isn't just a job for me — it's a way to help businesses connect with their audience in a genuine, meaningful way.": "Je suis Aurely Made — épouse, maman, créatrice UGC et cheffe d'entreprise, aujourd'hui installée à Atlanta après un parcours du Cameroun à la France. J'ai un profond amour pour la mode, le lifestyle et le storytelling authentique. Ces 3 dernières années, j'ai eu la chance de travailler avec plus de 30 marques au Cameroun, en France et aujourd'hui aux États-Unis. Mon parcours multiculturel a façonné ma façon de créer : j'aime mêler visuels épurés, émotion et moments de vie réelle pour donner vie à l'histoire des marques. Créer du contenu n'est pas qu'un métier pour moi — c'est une façon d'aider les entreprises à créer un lien sincère et profond avec leur audience.",
+"Services you're interested in": "Services qui vous intéressent",
+"Choose one or more": "Choisissez-en un ou plusieurs",
+"Select all": "Tout sélectionner",
+"Clear all": "Tout désélectionner",
+"Not sure yet": "Je ne sais pas encore",
+"<b>User Generated Content</b> is a means to forge <span class=\"hlp\" data-k=\"connect\">genuine connections</span> between brands and audiences. I focus on <span class=\"hlp\" data-k=\"story\">storytelling that reflects customers' perspectives</span>, leveraging my multicultural background and experience to create relatable content. My goal is to bring brands to life authentically, <span class=\"hlp\" data-k=\"trust\">fostering trust and engagement</span>, and helping them stand out in impactful ways.": "<b>Le contenu UGC</b> (contenu généré par les utilisateurs) crée des <span class=\"hlp\" data-k=\"connect\">liens sincères</span> entre les marques et leur audience. Je mise sur un <span class=\"hlp\" data-k=\"story\">storytelling qui reflète le point de vue des clients</span>, en m'appuyant sur mon parcours multiculturel et mon expérience pour créer un contenu proche des gens. Mon objectif : donner vie aux marques avec authenticité, <span class=\"hlp\" data-k=\"trust\">renforcer la confiance et l'engagement</span>, et les aider à se démarquer.",
+"Visas · Brands": "Visas · Marques",
+"Brands": "Marques",
+"…and many more:": "…et bien d'autres :",
+"Tap or swipe the passport to turn the pages": "Touchez ou faites glisser le passeport pour tourner les pages",
+"Click the passport or use the arrows to turn the pages": "Cliquez sur le passeport ou utilisez les flèches pour tourner les pages",
+"Press & hold a photo to move it — tap one to see it up close": "Appuyez longuement sur une photo pour la déplacer — touchez-en une pour la voir de près",
+"Drag the photos around — click one to see it up close": "Déplacez les photos — cliquez sur l'une d'elles pour la voir de près",
+"Scroll to continue": "Faites défiler pour continuer",
+"Show less": "Réduire"
 };
 
   /* =========================================================
@@ -4712,6 +5202,10 @@
     if (activePage === 'work' && current) moveBar(tabs.find(t => t.dataset.id === current));
     if (window.__pfRefresh) window.__pfRefresh();
     if (window.__ppRefresh) window.__ppRefresh();
+    if (window.__pickSync) window.__pickSync();
+    if (window.__ugcRefresh) window.__ugcRefresh();
+    if (window.__lockHintsRefresh) window.__lockHintsRefresh();
+    if (window.__foldRefresh) window.__foldRefresh();
     if (window.__redDots) window.__redDots();
   }
 
@@ -4764,6 +5258,13 @@
       ticking = false;
       const slot = footImg.getBoundingClientRect();
       if (!slot.height){ return; }
+      // menu open (red full-screen menu): no red logo on red — the white menu logo takes over
+      if (document.getElementById('nav').classList.contains('menu-open')){
+        fly.style.display = 'none';
+        footImg.style.visibility = '';
+        navImg.style.opacity = ''; navImg.style.filter = '';
+        return;
+      }
       const H = innerHeight;
       // progress: 0 when the footer logo appears at the bottom of the screen, 1 once it has risen ~55% up
       const p = Math.max(0, Math.min(1, (H - slot.top) / (H * .55)));
@@ -4815,6 +5316,43 @@
     };
     const io2 = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) run(e.target); }), {threshold:.6});
     els.forEach(el => io2.observe(el));
+  })();
+
+  /* "Why UGC": each card is a key idea of the paragraph. They play in turn, and the
+     matching words light up in the note — hover, focus or tap a card to jump to it. */
+  (function(){
+    const box = document.querySelector('.ugc-points'); if (!box) return;
+    const cards = [...box.querySelectorAll('.up')], paper = document.querySelector('.why-ugc .paper');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let cur = -1, timer = null, visible = false, held = false;
+    const replay = c => c.querySelectorAll('.lk,.sp,.n2,.b2,.hf,.mh,.b1 i').forEach(el => { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = ''; });
+    function activate(i, fromUser){
+      cur = i;
+      cards.forEach((c, k) => { c.classList.toggle('on', k === i); c.setAttribute('aria-current', k === i ? 'true' : 'false'); });
+      const key = cards[i].dataset.k;
+      paper.querySelectorAll('.hlp').forEach(s => s.classList.toggle('on', s.dataset.k === key));
+      paper.classList.add('lit');
+      replay(cards[i]);
+      box.classList.toggle('auto', !fromUser && !reduce);
+    }
+    const next = () => activate((cur + 1) % cards.length);
+    const start = () => { stop(); if (reduce || held || !visible) return; timer = setInterval(next, 4200); };
+    function stop(){ clearInterval(timer); timer = null; }
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      visible = e.isIntersecting;
+      if (visible && !box.classList.contains('play')){ box.classList.add('play'); setTimeout(() => { if (cur < 0) activate(0); start(); }, 1600); }
+      else if (visible) start(); else stop();
+    }), {threshold:.45});
+    io.observe(box);
+    cards.forEach((c, i) => {
+      const pick = () => { held = true; stop(); activate(i, true); };
+      c.addEventListener('mouseenter', pick);
+      c.addEventListener('focus', pick);
+      c.addEventListener('click', pick);
+      c.addEventListener('mouseleave', () => { held = false; setTimeout(() => { if (!held) start(); }, 1800); });
+      c.addEventListener('blur', () => { held = false; start(); });
+    });
+    window.__ugcRefresh = () => { if (cur >= 0) activate(cur, true); };
   })();
 
   /* ---------- Footer doodles: wiggle on tap (touch screens) ---------- */
@@ -5017,6 +5555,7 @@
       const s = slides[i];
       nameEl.textContent = s.dataset.name;
       fmtEl.textContent = tr(s.dataset.fmt);
+      const pw = document.querySelector('.phone-wrap'); if (pw) pw.style.setProperty('--glow', s.style.getPropertyValue('--bg') || '#A4161A');
       cntEl.textContent = pad(i + 1) + ' / ' + pad(slides.length);
       openEl.href = 'https://www.instagram.com/reel/' + s.dataset.id + '/';
       if (activeHl !== 'all' && activeHl !== s.dataset.cat) activeHl = s.dataset.cat;
@@ -5174,7 +5713,10 @@
 
   /* ---------- red dot at the end of every "handwriting + big title" heading ---------- */
   window.__redDots = function(){
-    const hs = [...document.querySelectorAll('h1,h2,h3')].filter(h => h.querySelector('.script') || (h.previousElementSibling && h.previousElementSibling.classList.contains('script')));
+    const hs = [...new Set([
+      ...document.querySelectorAll('main.page h1, main.page h2, main.page .kick'),
+      ...[...document.querySelectorAll('h3')].filter(h => h.querySelector('.script') || (h.previousElementSibling && h.previousElementSibling.classList.contains('script')))
+    ])].filter(h => !h.closest('.pcard, .leaf, .slide'));
     hs.forEach(h => {
       h.querySelectorAll('.rdot').forEach(d => d.remove());
       const w = document.createTreeWalker(h, NodeFilter.SHOW_TEXT); let n, last = null;
@@ -5198,6 +5740,101 @@
     const setH = () => nav.style.setProperty('--navh', Math.round(nav.getBoundingClientRect().height) + 'px');
     burger.addEventListener('click', () => { setH(); requestAnimationFrame(setH); setTimeout(setH, 450); const l = document.querySelector('.links'); if (l){ l.scrollLeft = 0; l.scrollTop = 0; } });
     addEventListener('resize', setH); setH();
+  })();
+
+  /* ---------- light: cursor spotlights on cards; loops only run while on screen ---------- */
+  (function(){
+    const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
+    if (fine){
+      document.querySelectorAll('.pcard, .proj .tile, .wy, .pack, .quote').forEach(card => {
+        card.classList.add('glow-card');
+        const bgEl = card.matches('.pcard') ? card.querySelector('.pc-top') : card;
+        const m = getComputedStyle(bgEl).backgroundColor.match(/\d+/g);
+        if (m && (0.299 * m[0] + 0.587 * m[1] + 0.114 * m[2]) < 140) card.classList.add('dark-spot');
+        const s = document.createElement('span'); s.className = 'spot'; s.setAttribute('aria-hidden', 'true'); card.appendChild(s);
+        card.addEventListener('pointermove', e => { const r = card.getBoundingClientRect(); card.style.setProperty('--mx', (e.clientX - r.left) + 'px'); card.style.setProperty('--my', (e.clientY - r.top) + 'px'); });
+      });
+    }
+    const loops = document.querySelectorAll('.hero-visual, .hero-text, .pf2-hero, .phone-wrap');
+    if ('IntersectionObserver' in window){
+      const io = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('glow-on', e.isIntersecting)), {threshold:.05});
+      loops.forEach(el => io.observe(el));
+    } else loops.forEach(el => el.classList.add('glow-on'));
+  })();
+
+  /* ---------- phones: swipe rows get dots that follow the scroll ---------- */
+  (function(){
+    const mq = matchMedia('(max-width:640px)');
+    const rows = [...document.querySelectorAll('.projects, .pack-grid, .quotes, .love-grid, .w3-grid')];
+    rows.forEach(row => {
+      const dots = document.createElement('div'); dots.className = 'swipe-dots'; dots.setAttribute('aria-hidden', 'true');
+      row.after(dots);
+      const items = () => [...row.children].filter(c => c.offsetParent !== null);
+      const build = () => { const n = items().length; if (dots.children.length !== n){ dots.innerHTML = ''; for (let i = 0; i < n; i++){ const d = document.createElement('i'); d.addEventListener('click', () => { const it = items()[i]; row.scrollTo({left: it.offsetLeft - (row.clientWidth - it.offsetWidth) / 2, behavior:'smooth'}); }); dots.appendChild(d); } } };
+      const sync = () => { if (!mq.matches) return; build(); const its = items(); const mid = row.scrollLeft + row.clientWidth / 2; let best = 0, bd = 1e9; its.forEach((it, i) => { const d = Math.abs(it.offsetLeft + it.offsetWidth / 2 - mid); if (d < bd){ bd = d; best = i; } }); [...dots.children].forEach((d, i) => d.classList.toggle('on', i === best)); };
+      row.addEventListener('scroll', () => requestAnimationFrame(sync), {passive:true});
+      addEventListener('resize', sync); setTimeout(sync, 300);
+      if ('IntersectionObserver' in window) new IntersectionObserver(es => { if (es[0].isIntersecting) sync(); }).observe(row);
+    });
+  })();
+
+  /* ---------- phones: long paragraphs fold to a few lines with "Read more" ---------- */
+  (function(){
+    const mq = matchMedia('(max-width:640px)');
+    const picks = [
+      ['#about .wrap.split > div:first-child > p', 5],
+      ['.sec.why .split > div > p', 4],
+      ['.sec.why .why-2 > div > p', 4],
+      ['.sec.testi .quote blockquote', 7],
+      ['.sec.story .split > div:first-child > p:not(.big)', 3]
+    ];
+    const els = [];
+    picks.forEach(([sel, n]) => document.querySelectorAll(sel).forEach(el => { if (!els.includes(el)) { el.style.setProperty('--lines', n); els.push(el); } }));
+    els.forEach(el => {
+      const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'fold-btn';
+      const label = () => { btn.textContent = tr(el.classList.contains('open') ? 'Show less' : 'Read more') + (el.classList.contains('open') ? ' ↑' : ' ↓'); };
+      btn.addEventListener('click', () => { el.classList.toggle('open'); label(); });
+      el.after(btn); el._foldBtn = btn; el._foldLabel = label;
+    });
+    const apply = () => els.forEach(el => {
+      el.classList.toggle('fold', mq.matches);
+      if (!mq.matches){ el._foldBtn.style.display = 'none'; return; }
+      const needs = el.classList.contains('open') || el.scrollHeight > el.clientHeight + 4;
+      el._foldBtn.style.display = needs ? '' : 'none';
+      el._foldLabel();
+    });
+    apply(); (mq.addEventListener ? mq.addEventListener('change', apply) : mq.addListener(apply));
+    addEventListener('resize', apply);
+    window.__foldRefresh = apply;
+    if ('IntersectionObserver' in window) els.forEach(el => new IntersectionObserver(es => { if (es[0].isIntersecting) apply(); }).observe(el));
+  })();
+
+  /* ---------- page transition curtain ---------- */
+  (function(){
+    const cur = document.createElement('div'); cur.className = 'curtain'; cur.setAttribute('aria-hidden', 'true');
+    const logo = document.querySelector('.nav .brand img');
+    cur.innerHTML = '<div class="cu cu-a"></div><div class="cu cu-b"><div class="cu-inner">' + (logo ? '<img src="' + logo.getAttribute('src') + '" alt="">' : '') + '<div class="cu-name"></div><span class="cu-line"></span></div></div>';
+    document.body.appendChild(cur);
+    const nameEl = cur.querySelector('.cu-name');
+    const NAMES = {home:'Home', work:'Portfolio', about:'About me', services:'Services & Products'};
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let busy = false;
+    window.__curtain = (dest, swap) => {
+      if (busy){ swap(); return; }
+      busy = true;
+      nameEl.innerHTML = tr(NAMES[dest] || '') + '<i>.</i>';
+      cur.classList.remove('out'); cur.classList.add('run');
+      void cur.offsetWidth;
+      cur.classList.add('in');
+      const cover = reduce ? 220 : 820;                      // fully covered → swap pages underneath
+      setTimeout(() => {
+        swap();
+        setTimeout(() => {
+          cur.classList.add('out'); cur.classList.remove('in');
+          setTimeout(() => { cur.classList.remove('run', 'out'); busy = false; }, reduce ? 240 : 900);
+        }, reduce ? 60 : 260);
+      }, cover);
+    };
   })();
 </script>
 </body>
